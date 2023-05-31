@@ -28,7 +28,7 @@ function App() {
 
   return (
     <>
-      <div className="bg-gray-100 w-full h-screen flex justify-between p-4">
+      <div className="bg-gray-100 w-full h-screen flex justify-between p-4 overflow-hidden">
         <Dashboard />
         <Sidebar cryptocurrencies={cryptocurrencies} />
       </div>
