@@ -15,10 +15,12 @@ function Input({ label, placeholder, type, max, variant = "default" }) {
   };
 
   return (
-    <div className="mb-4 m-2">
-      <label className="block text-xs font-medium text-gray-500 uppercase mb-1">
-        {label}
-      </label>
+    <div className="w-full ml-4">
+      {label && (
+        <label className="block text-xs font-medium text-gray-500 uppercase">
+          {label}
+        </label>
+      )}
       {variant === "default" && (
         <input
           className={`border ${
@@ -32,16 +34,16 @@ function Input({ label, placeholder, type, max, variant = "default" }) {
       )}
       {variant === "search" && (
         <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center cursor-pointer">
-            <i className="fas fa-search text-gray-400"></i>
-          </div>
           <input
-            className="border rounded-md w-full py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500"
+            className="rounded-md w-full py-4 pl-10 pr-3 text-base placeholder-gray-400 focus:outline-none focus:border-blue-500"
             type="text"
             placeholder={placeholder}
             value={value}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-10 pl-3 flex items-center cursor-pointer">
+            <i className="fas fa-search text-gray-400"></i>
+          </div>
         </div>
       )}
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}

@@ -26,34 +26,11 @@ const Chart = () => {
 
   const options = {
     scales: {
-      xAxes: [
-        {
-          scaleLabel: {
-            display: true,
-            labelString: "Month",
-          },
-          gridLines: {
-            display: false,
-          },
+      x: {
+        grid: {
+          display: false, // Hide vertical grid lines
         },
-      ],
-      yAxes: [
-        {
-          scaleLabel: {
-            display: true,
-            labelString: "USD ($) - Price",
-          },
-          gridLines: {
-            drawBorder: false,
-            zeroLineColor: "rgba(0, 0, 0, 0.1)",
-            color: "rgba(0, 0, 0, 0.1)",
-          },
-          ticks: {
-            beginAtZero: true,
-            position: "right",
-          },
-        },
-      ],
+      },
     },
   };
 

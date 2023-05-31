@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 const Dropdown = ({
+  custClass = "",
   type = "default",
   placeholder,
   label,
@@ -55,16 +56,16 @@ const Dropdown = ({
         {label}
       </label>
       <div
-        className={`w-full rounded-lg shadow-sm ${
-          color === "dark" ? "bg-gray-100" : "bg-white"
-        } border-2 ${
+        className={`w-full flex justify-center relative rounded-lg shadow-sm ${custClass} ${
+          color === "dark" ? "bg-gray-100 border-2" : "bg-white"
+        }  ${
           isOpen || selectedValues.length
             ? "border-blue-500"
             : "border-gray-300"
         } focus:border-blue-500`}
         onClick={toggleDropdown}
       >
-        <div className="flex items-center justify-between px-4 py-2 ">
+        <div className="flex w-full items-center justify-between px-4 py-2 ">
           <div className="flex-grow truncate">{getSelectedValueText()}</div>
           <div className="ml-2">
             <i
@@ -75,7 +76,7 @@ const Dropdown = ({
           </div>
         </div>
         {isOpen && (
-          <div className="absolute z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white">
+          <div className="absolute top-full z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white">
             {options.map((option, index) => (
               <div
                 key={index}

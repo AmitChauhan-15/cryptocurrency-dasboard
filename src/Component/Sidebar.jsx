@@ -5,8 +5,8 @@ function Sidebar({ cryptocurrencies }) {
   );
 
   return (
-    <div className=" bg-white rounded-lg p-8 h-full overflow-y-auto overflow-x-hidden">
-      <h3 className="font-semibold text-lg w-4/5 mb-4">
+    <div className=" bg-white w-1/4 rounded-lg p-8 h-full overflow-y-auto overflow-x-hidden">
+      <h3 className="font-semibold text-lg mb-4">
         Cryptocurrency by Market Cap
       </h3>
       {sortedCrypto.map((crypto) => (
