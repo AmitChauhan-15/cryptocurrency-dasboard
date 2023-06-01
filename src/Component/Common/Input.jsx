@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-function Input({ label, placeholder, type, max, variant = "default" }) {
+function Input({
+  label,
+  placeholder,
+  type,
+  max,
+  variant = "default",
+  custClass = "",
+}) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
@@ -15,7 +22,7 @@ function Input({ label, placeholder, type, max, variant = "default" }) {
   };
 
   return (
-    <div className="w-full ml-4">
+    <div className={`w-full relative ${custClass}`}>
       {label && (
         <label className="block text-xs font-medium text-gray-500 uppercase">
           {label}
@@ -23,8 +30,8 @@ function Input({ label, placeholder, type, max, variant = "default" }) {
       )}
       {variant === "default" && (
         <input
-          className={`border ${
-            error ? "border-red-500" : "border-gray-300"
+          className={`border pt-3 pb- ${
+            error ? "border-red-500 focus:border-red-500" : "border-gray-300"
           } rounded-md w-full py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500`}
           type={type}
           placeholder={placeholder}
@@ -46,7 +53,9 @@ function Input({ label, placeholder, type, max, variant = "default" }) {
           </div>
         </div>
       )}
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && (
+        <p className="absolute top-full text-xs text-red-500 mt-1">{error}</p>
+      )}
     </div>
   );
 }

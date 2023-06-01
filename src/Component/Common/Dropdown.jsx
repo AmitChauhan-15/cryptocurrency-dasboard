@@ -8,6 +8,8 @@ const Dropdown = ({
   color = "default",
   options,
   setState,
+  labelClass = "",
+  optionPosition = "bottom",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -53,7 +55,7 @@ const Dropdown = ({
   return (
     <div className="relative flex items-center justify-between">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mr-3">
+        <label className={`block text-sm font-medium mr-3 ${labelClass}`}>
           {label}
         </label>
       )}
@@ -67,7 +69,7 @@ const Dropdown = ({
         } focus:border-blue-500`}
         onClick={toggleDropdown}
       >
-        <div className="flex items-center px-4 py-2 ">
+        <div className="flex w-full items-center px-4 py-2 ">
           <div className="flex-grow truncate">{getSelectedValueText()}</div>
           <div className="ml-2">
             <i
@@ -78,7 +80,11 @@ const Dropdown = ({
           </div>
         </div>
         {isOpen && (
-          <div className="absolute top-full z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white">
+          <div
+            className={`absolute z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white ${
+              optionPosition === "top" ? "-top-44" : "top-full"
+            }`}
+          >
             {options.map((option, index) => (
               <div
                 key={index}

@@ -5,7 +5,7 @@ function Sidebar({ cryptocurrencies }) {
   );
 
   return (
-    <div className=" bg-white w-1/4 rounded-lg p-8 h-full overflow-y-auto overflow-x-hidden">
+    <div className=" bg-white w-1/4 hidden lg:block rounded-lg p-8 h-full overflow-y-auto overflow-x-hidden">
       <h3 className="font-semibold text-lg mb-4">
         Cryptocurrency by Market Cap
       </h3>
