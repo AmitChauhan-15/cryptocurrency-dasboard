@@ -3,12 +3,12 @@ import Dropdown from "./Common/Dropdown";
 import Input from "./Common/Input";
 import Button from "./Common/Button";
 
-function Dashboard() {
+function Dashboard({ sidebarState }) {
   // eslint-disable-next-line
   const [currencyOption, setCurrencyOption] = useState("");
 
   return (
-    <div className="h-full min-h-fit w-full lg:w-3/4 lg:pr-6 pb overflow-auto">
+    <div className="h-full w-full min-h-full lg:w-3/4 lg:pr-4 pb overflow-auto">
       <div className="flex items-start">
         <Dropdown
           custClass="w-20 text-xs h-12 sm:text-base sm:w-36 sm:h-14"
@@ -18,8 +18,14 @@ function Dashboard() {
         <Input
           placeholder={"Search by coin"}
           variant="search"
-          custClass="ml-4"
+          custClass="ml-4 mr-4 lg:mr-0"
         />
+        <div
+          className="flex sm:w-16 justify-center items-center px-3 py-4 sm:py-5 rounded-md bg-white lg:hidden"
+          onClick={() => sidebarState((prev) => !prev)}
+        >
+          <i className="fas fa-bars"></i>
+        </div>
       </div>
       <div className="w-full min-h-fit py-3 px-4 bg-white rounded-md mt-4">
         <div className="flex justify-end">
@@ -68,7 +74,7 @@ function Dashboard() {
           <div className="w-full h-72 bg-slate-200"></div>
         </div>
       </div>
-      <div className="w-full h-fit flex flex-col sm:flex-row justify-between mt-4">
+      <div className="w-full min-h-fit flex flex-col sm:flex-row justify-between mt-4">
         <div className="w-full sm:w-1/2 sm:mb-0 h-hull bg-white py-3 px-4 mr-2 mb-3 rounded-md">
           <div className="flex justify-between">
             <h1 className="text-base sm:text-lg font-semibold">Portfolio</h1>
