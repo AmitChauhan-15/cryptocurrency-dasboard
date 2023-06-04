@@ -53,9 +53,11 @@ const Dropdown = ({
   };
 
   return (
-    <div className="relative flex items-center justify-between">
+    <div className="relative flex items-center justify-start sm:justify-between">
       {label && (
-        <label className={`block text-sm font-medium mr-3 ${labelClass}`}>
+        <label
+          className={`block text-xs sm:text-sm font-medium mr-3 ${labelClass}`}
+        >
           {label}
         </label>
       )}
@@ -69,8 +71,10 @@ const Dropdown = ({
         } focus:border-blue-500`}
         onClick={toggleDropdown}
       >
-        <div className="flex w-full items-center px-4 py-2 ">
-          <div className="flex-grow truncate">{getSelectedValueText()}</div>
+        <div className="flex max-w-full min-w-full items-center px-2 sm:px-4 py-1 sm:py-2 ">
+          <div className="flex-grow text-xs sm:text-base truncate">
+            {getSelectedValueText()}
+          </div>
           <div className="ml-2">
             <i
               className={`fas fa-caret-down transform transition-transform duration-300 ${
@@ -88,7 +92,7 @@ const Dropdown = ({
             {options.map((option, index) => (
               <div
                 key={index}
-                className={`px-4 py-3 mb-1 text-gray-400 ${
+                className={`text-xs sm:text-base px-4 py-3 mb-1 text-gray-400 ${
                   selectedValues.includes(option)
                     ? " text-gray-900 bg-red-100"
                     : ""
