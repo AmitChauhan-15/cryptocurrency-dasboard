@@ -1,4 +1,4 @@
-function Sidebar({ cryptocurrencies, active = false }) {
+function Sidebar({ cryptocurrencies, active = false, setState }) {
   // Sort cryptocurrencies by market cap in descending order
   const sortedCrypto = cryptocurrencies.sort(
     (a, b) => b.marketCap - a.marketCap
@@ -11,12 +11,19 @@ function Sidebar({ cryptocurrencies, active = false }) {
         className={`${
           active ? "block" : "hidden"
         } absolute top-0 left-0 lg:hidden w-full h-full z-10 bg-black opacity-50`}
+        onClick={() => setState((prev) => !prev)}
       ></div>
       <div
         className={`${
           active ? "block" : "hidden"
-        } bg-white w-96 lg:w-1/4 lg:block rounded-lg p-8 min-h-full overflow-y-auto overflow-x-hidden z-20`}
+        } absolute top-0 right-0 lg:relative rounded-l-md bg-white w-full sm:w-96 lg:w-1/4 lg:block lg:rounded-lg p-8 min-h-full overflow-y-auto overflow-x-hidden z-20`}
       >
+        <div
+          className="block absolute top-3 right-4 lg:hidden hover:scale-110 cursor-pointer"
+          onClick={() => setState((prev) => !prev)}
+        >
+          <i className="fas fa-close mb-4"></i>
+        </div>
         <h3 className="font-semibold text-lg mb-4">
           Cryptocurrency by Market Cap
         </h3>

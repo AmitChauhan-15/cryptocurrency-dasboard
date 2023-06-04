@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Dropdown from "./Common/Dropdown";
 import Input from "./Common/Input";
 import Button from "./Common/Button";
+import Chart from "./Common/Chart";
 
 function Dashboard({ sidebarState }) {
   // eslint-disable-next-line
@@ -21,7 +22,7 @@ function Dashboard({ sidebarState }) {
           custClass="ml-4 mr-4 lg:mr-0"
         />
         <div
-          className="flex sm:w-16 justify-center items-center px-3 py-4 sm:py-5 rounded-md bg-white lg:hidden"
+          className="flex sm:w-16 justify-center items-center px-3 py-4 sm:py-5 rounded-md bg-white lg:hidden cursor-pointer"
           onClick={() => sidebarState((prev) => !prev)}
         >
           <i className="fas fa-bars"></i>
@@ -70,18 +71,31 @@ function Dashboard({ sidebarState }) {
             />
           </div>
         </div>
-        <div className="flex w-full justify-center mt-4">
-          <div className="w-full h-72 bg-slate-200"></div>
+        <div className="flex w-full h-72 justify-center mt-4">
+          {/* <div className="w-full h-72 bg-slate-200"></div> */}
+          <Chart
+            lable={["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]}
+            chartData={[65, 59, 80, 81, 56, 55, 40]}
+            legend="Bitcoin"
+            type="line"
+          />
         </div>
       </div>
       <div className="w-full min-h-fit flex flex-col sm:flex-row justify-between mt-4">
         <div className="w-full sm:w-1/2 sm:mb-0 h-hull bg-white py-3 px-4 mr-2 mb-3 rounded-md">
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-3">
             <h1 className="text-base sm:text-lg font-semibold">Portfolio</h1>
             <div className="flex items-center">
               <p className="text-xs sm:text-sm text-gray-400">Total Value</p>
               <h2 className="text-sm sm:text-base font-semibold ml-2">$1000</h2>
             </div>
+          </div>
+          <div className="flex lg:w-5/6 justify-start h-60 p-1">
+            <Chart
+              type="pie"
+              chartData={[300, 500, 200]}
+              lable={["Bitcoin", "Etherum", "Dogecoin"]}
+            />
           </div>
         </div>
         <div className="w-full sm:w-1/2 h-hull bg-white py-3 px-4 sm:ml-2 rounded-md">
