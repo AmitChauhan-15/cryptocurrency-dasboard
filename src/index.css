@@ -7,3 +7,48 @@
 * {
   font-family: "Poppins";
 }
+
+@layer utilities {
+  .min-w-20 {
+    min-width: 5rem;
+  }
+  .max-w-20 {
+    max-width: 5rem;
+  }
+  .min-w-28 {
+    min-width: 7rem;
+  }
+  .max-w-28 {
+    max-width: 7rem;
+  }
+  .min-w-32 {
+    min-width: 8rem;
+  }
+  .max-w-32 {
+    max-width: 8rem;
+  }
+  .min-w-48 {
+    min-width: 12rem;
+  }
+  .max-w-48 {
+    max-width: 12rem;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  display: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #a1a1a1;
+  border-radius: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #696969;
+}

@@ -62,6 +62,13 @@ const Chart = ({ lable, chartData, type = "line", legend }) => {
         grid: {
           display: false, // Hide vertical grid lines
         },
+        ticks: {
+          // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+          callback: function (val, index, arr) {
+            const number = Math.trunc(arr.length / 6);
+            return index % number === 0 ? this.getLabelForValue(val) : "";
+          },
+        },
       },
     },
     plugins: {

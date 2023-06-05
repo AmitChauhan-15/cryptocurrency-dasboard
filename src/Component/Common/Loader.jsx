@@ -1,6 +1,6 @@
 import React from "react";
 
-function Loader({ type = "default", size = "3" }) {
+function Loader({ type = "default", size = "3", overlay = false }) {
   const LoaderType = {
     default: "fa-circle-notch",
     INR: "fa-inr",
@@ -9,9 +9,14 @@ function Loader({ type = "default", size = "3" }) {
     JPY: "fa-jpy",
   };
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <i className={`fas ${LoaderType[type]} fa-spin fa-${size}x`}></i>
-    </div>
+    <>
+      {overlay && (
+        <div className="absolute top-0 left-0 h-screen w-screen bg-black opacity-25 z-40"></div>
+      )}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+        <i className={`fas ${LoaderType[type]} fa-spin fa-${size}x`}></i>
+      </div>
+    </>
   );
 }
 
