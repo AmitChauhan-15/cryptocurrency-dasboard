@@ -6,9 +6,11 @@ import Chart from "./Common/Chart";
 import Loader from "./Common/Loader";
 import moment from "moment/moment";
 import Modal from "./Common/Modal";
+import { useAlert } from "react-alert";
 
 function Dashboard({ sidebarState, cryptoOption }) {
-  // eslint-disable-next-line
+  const alert = useAlert();
+
   const [currency, setCurrency] = useState("usd");
   const [cryptocurrency, setCryptocurrency] = useState([]);
   const [chartType, setChartType] = useState("");
@@ -20,6 +22,8 @@ function Dashboard({ sidebarState, cryptoOption }) {
     { currency: "Tether", volume: "330.05" },
     { currency: "Dogecoin", volume: "1980" },
   ]);
+  const [sell, setSell] = useState({ value: "", currency: "" });
+  // const [buy, setBuy] = useState("");
   const [search, setSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -62,9 +66,30 @@ function Dashboard({ sidebarState, cryptoOption }) {
       setSearchData(data?.coins);
       setModal(true);
     } catch (err) {
-      console.log("ERROR", err);
+      // console.log("ERROR", err);
+      alert.error("Couldn't fetch data!");
     }
     setLoading(false);
+  };
+
+  const handleSellCoin = (value) => {
+    if (isNaN(Number(value))) {
+      setSell({
+        ...sell,
+        currency: value,
+      });
+    } else {
+      setSell({
+        ...sell,
+        value,
+      });
+    }
+  };
+
+  const getPortfolioCurrencyHolding = (currency) => {
+    return (
+      portfolio.filter((obj) => obj.currency === currency)[0]?.volume || ""
+    );
   };
 
   useEffect(() => {
@@ -112,7 +137,8 @@ function Dashboard({ sidebarState, cryptoOption }) {
               ?.filter((_, i) => i % dateLimit === 0)
           );
         } catch (error) {
-          console.log("ERROR", error);
+          // console.log("ERROR", error);
+          alert.error("Couldn't fetch data!");
         }
       }
 
@@ -144,9 +170,11 @@ function Dashboard({ sidebarState, cryptoOption }) {
     //eslint-disable-next-line
   }, [cryptoOption, dateRangeUNIX, currency, cryptocurrency]);
 
+  console.log("SELL", sell);
+
   return (
     <>
-      {loading && <Loader overlay={true} size="6" />}
+      {loading && <Loader overlay={true} size="6" type={currency} />}
       <div className="h-full w-full min-h-full xl:w-3/4 xl:pr-4 pb custom-scrollbar overflow-hidden">
         <div className="flex items-start">
           <Dropdown
@@ -196,7 +224,13 @@ function Dashboard({ sidebarState, cryptoOption }) {
               <Dropdown
                 type="multiselect"
                 placeholder="Cryptocurrency"
-                options={cryptoOption ? Object.keys(cryptoOption) : []}
+                options={
+                  cryptoOption
+                    ? Object.keys(cryptoOption).filter(
+                        (key) => !key.includes("Price")
+                      )
+                    : []
+                }
                 defaultValue="Bitcoin"
                 color="dark"
                 maxSelection={2}
@@ -286,11 +320,17 @@ function Dashboard({ sidebarState, cryptoOption }) {
                   label="Sell"
                   labelClass="text-red-500"
                   color="dark"
-                  custClass="min-w-28 max-w-28 "
+                  custClass="min-w-28 max-w-28"
+                  handleChange={handleSellCoin}
                 />
               </div>
               <div className="ml-6 ">
-                <Input label="Enter value" max={4} />
+                <Input
+                  label="Enter value"
+                  max={getPortfolioCurrencyHolding(sell.currency) || ""}
+                  state={sell.value}
+                  setState={handleSellCoin}
+                />
               </div>
             </div>
             <div className="flex py-4 px-2 items-center">

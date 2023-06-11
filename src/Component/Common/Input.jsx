@@ -11,16 +11,14 @@ function Input({
   state,
   search,
 }) {
-  const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setValue(e.target.value);
-    setState(e.target.value);
-    if (e.target.value > max) {
+    if (max && e.target.value > max) {
       setError(`Limit exceed`);
     } else {
       setError("");
+      setState(e.target.value);
     }
   };
 
@@ -38,7 +36,7 @@ function Input({
           } rounded-md w-full py-1 sm:py-2 px-1 sm:px-3 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500`}
           type={type}
           placeholder={placeholder}
-          value={value}
+          value={state}
           onChange={handleChange}
         />
       )}

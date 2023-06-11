@@ -3,10 +3,10 @@ import React from "react";
 function Loader({ type = "default", size = "3", overlay = false }) {
   const LoaderType = {
     default: "fa-circle-notch",
-    INR: "fa-inr",
-    USD: "fa-usd",
-    EUR: "fa-eur",
-    JPY: "fa-jpy",
+    inr: "fa-inr",
+    usd: "fa-usd",
+    eur: "fa-eur",
+    jpy: "fa-jpy",
   };
   return (
     <>

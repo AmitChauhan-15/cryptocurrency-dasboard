@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Loader from "./Common/Loader";
+import { useAlert } from "react-alert";
 
 function Sidebar({ active = false, setState, cryptoOption }) {
+  const alert = useAlert();
+
   const [cryptoData, setCryptoData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +24,8 @@ function Sidebar({ active = false, setState, cryptoOption }) {
         });
         cryptoOption(crypto);
       } catch (error) {
-        console.log("ERROR", error);
+        // console.log("ERROR", error);
+        alert.error("Couldn't fetch data!");
       }
       setLoading(false);
     };
