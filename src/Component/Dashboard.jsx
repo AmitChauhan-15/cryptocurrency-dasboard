@@ -147,7 +147,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
   return (
     <>
       {loading && <Loader overlay={true} size="6" />}
-      <div className="h-full w-full min-h-full xl:w-3/4 xl:pr-4 pb custom-scrollbar overflow-auto">
+      <div className="h-full w-full min-h-full xl:w-3/4 xl:pr-4 pb custom-scrollbar overflow-hidden">
         <div className="flex items-start">
           <Dropdown
             custClass="w-20 text-xs h-12 sm:text-base sm:w-36 sm:h-14"
@@ -214,7 +214,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
               />
             </div>
           </div>
-          <div className="flex w-full h-96 justify-center mt-4">
+          <div className="flex w-full h-72 justify-center mt-4">
             {chartPrice.length > 0 ? (
               <Chart
                 label={chartLabel}
@@ -242,7 +242,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
           </div>
         </div>
         <div className="w-full min-h-fit flex flex-col sm:flex-row justify-between mt-4">
-          <div className="w-full sm:w-1/2 sm:mb-0 min-h-fit h-80 bg-white py-3 px-4 mr-2 mb-3 rounded-md">
+          <div className="w-full sm:w-1/2 sm:mb-0 min-h-fit h-72 bg-white py-3 px-4 mr-2 mb-3 rounded-md">
             <div className="flex justify-between mb-3">
               <h1 className="text-base sm:text-lg font-semibold">Portfolio</h1>
               <div className="flex items-center">
@@ -258,7 +258,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
                 </h2>
               </div>
             </div>
-            <div className="flex lg:w-5/6 justify-start h-60 p-1">
+            <div className="flex lg:w-5/6 justify-end h-4/5 p-1">
               <Chart
                 type="pie"
                 chartData={
@@ -272,7 +272,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
               />
             </div>
           </div>
-          <div className="w-full sm:w-1/2 min-h-fit h-80 bg-white py-3 px-4 sm:ml-2 rounded-md">
+          <div className="w-full sm:w-1/2 min-h-fit h-72 bg-white py-3 px-4 sm:ml-2 rounded-md">
             <div className="flex justify-between">
               <h1 className="text-base sm:text-lg font-semibold">
                 Exchange Coins

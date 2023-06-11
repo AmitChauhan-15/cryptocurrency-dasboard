@@ -9,7 +9,7 @@
 }
 
 @layer utilities {
-  .min-w-10{
+  .min-w-10 {
     min-width: 2.5rem;
   }
   .min-w-20 {
