@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Loader from "./Common/Loader";
 
-function Sidebar({ active = false, setState }) {
+function Sidebar({ active = false, setState, cryptoOption }) {
   const [cryptoData, setCryptoData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const sidebarData = async () => {
+      setLoading(true);
+      let crypto = {};
       const url =
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=15&page=1&sparkline=false&price_change_percentage=24&locale=en";
       try {
         const response = await fetch(url);
         const data = await response.json();
         setCryptoData(data);
-        console.log("AJAX CALL", data);
+        data.forEach((obj) => {
+          crypto[obj.name] = obj.id;
+          crypto[`${obj.name}Price`] = obj.current_price;
+        });
+        cryptoOption(crypto);
       } catch (error) {
         console.log("ERROR", error);
       }
+      setLoading(false);
     };
     cryptoData.length === 0 && sidebarData();
-
     //eslint-disable-next-line
   }, []);
 
@@ -80,6 +87,19 @@ function Sidebar({ active = false, setState }) {
                     {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
                   </p>
                 </div>
+              </div>
+            ))}
+          {cryptoData.length === 0 &&
+            (loading ? (
+              <Loader />
+            ) : (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex flex-col justify-center items-center">
+                <div className="min-h-fit mb-4">
+                  <i className="fa fa-triangle-exclamation fa-4x"></i>
+                </div>
+                <p className="text-lg font-semibold">
+                  Cryptocurrency not found!
+                </p>
               </div>
             ))}
         </div>

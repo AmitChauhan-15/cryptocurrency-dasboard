@@ -7,13 +7,16 @@ function Input({
   max,
   variant = "default",
   custClass = "",
+  setState = "",
+  state,
+  search,
 }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setValue(e.target.value);
-
+    setState(e.target.value);
     if (e.target.value > max) {
       setError(`Limit exceed`);
     } else {
@@ -45,10 +48,14 @@ function Input({
             className="rounded-md w-full py-4 pl-5 sm:pl-10 pr-3 text-xs sm:text-base placeholder-gray-400 focus:outline-none focus:border-blue-500"
             type="text"
             placeholder={placeholder}
-            value={value}
+            value={state}
             onChange={handleChange}
+            onKeyDown={(e) => e.key === "Enter" && search(state)}
           />
-          <div className="absolute inset-y-0 right-5 sm:right-10 pl-3 flex items-center cursor-pointer">
+          <div
+            className="absolute inset-y-0 right-5 sm:right-10 pl-3 flex items-center cursor-pointer"
+            onClick={() => search(state)}
+          >
             <i className="fas fa-search text-gray-400"></i>
           </div>
         </div>

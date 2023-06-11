@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Dropdown = ({
   custClass = "",
@@ -7,9 +7,11 @@ const Dropdown = ({
   label,
   color = "default",
   options,
-  setState,
+  defaultValue,
+  handleChange,
   labelClass = "",
   optionPosition = "bottom",
+  maxSelection,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -23,18 +25,35 @@ const Dropdown = ({
       const valueIndex = selectedValues.indexOf(value);
 
       if (valueIndex === -1) {
-        newSelectedValues.push(value);
+        newSelectedValues.length < maxSelection &&
+          newSelectedValues.push(value);
       } else {
         newSelectedValues.splice(valueIndex, 1);
       }
+      newSelectedValues.length === 0 && newSelectedValues.push(defaultValue);
     } else {
       newSelectedValues = [value];
       setIsOpen(false);
     }
 
     setSelectedValues(newSelectedValues);
-    setState(newSelectedValues);
+
+    if (handleChange && type === "multiselect") {
+      handleChange(newSelectedValues);
+    } else if (handleChange) {
+      handleChange(...newSelectedValues);
+    }
   };
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectedValues([defaultValue]);
+      type === "default"
+        ? handleChange(defaultValue)
+        : handleChange([defaultValue]);
+    }
+    //eslint-disable-next-line
+  }, [defaultValue]);
 
   const getSelectedValueText = () => {
     if (selectedValues.length === 0) {
@@ -85,7 +104,7 @@ const Dropdown = ({
         </div>
         {isOpen && (
           <div
-            className={`absolute z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white ${
+            className={`absolute z-10 w-full py-1 mt-1 overflow-auto rounded-md shadow-lg max-h-60 bg-white custom-scrollbar ${
               optionPosition === "top" ? "-top-44" : "top-full"
             }`}
           >

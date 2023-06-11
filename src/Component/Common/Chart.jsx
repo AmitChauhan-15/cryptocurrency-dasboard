@@ -25,25 +25,24 @@ ChartJS.register(
   Legend
 );
 
-const Chart = ({ lable, chartData, type = "line", legend }) => {
+const Chart = ({ label, chartData, type = "line", legend }) => {
   const color = ["#60a5fa", "#f56565", "#faf089"];
 
+  const datasets = chartData.map((value, i) => ({
+    label: legend?.[i],
+    data: value,
+    fill: false,
+    borderColor: type === "pie" ? "" : color[i],
+    backgroundColor: type === "pie" ? value.map((_, i) => color[i]) : color[i],
+    pointBackgroundColor: color[i],
+    pointRadius: 1,
+    borderWidth: type === "pie" ? 0 : 4,
+    tension: 0,
+  }));
+
   const data = {
-    labels: lable,
-    datasets: [
-      {
-        label: legend,
-        data: chartData,
-        fill: false,
-        borderColor: type === "pie" ? "" : "#60a5fa",
-        backgroundColor:
-          type === "pie" ? chartData.map((_, i) => color[i]) : "#60a5fa",
-        pointBackgroundColor: "#60a5fa",
-        pointRadius: 1,
-        borderWidth: type === "pie" ? 0 : 4,
-        tension: 0,
-      },
-    ],
+    labels: label,
+    datasets: datasets.length > 0 ? datasets : [],
   };
 
   const options = {
@@ -66,7 +65,9 @@ const Chart = ({ lable, chartData, type = "line", legend }) => {
           // For a category axis, the val is the index so the lookup via getLabelForValue is needed
           callback: function (val, index, arr) {
             const number = Math.trunc(arr.length / 6);
-            return index % number === 0 ? this.getLabelForValue(val) : "";
+            return index % number === 0 || arr.length === index + 1
+              ? this.getLabelForValue(val)
+              : "";
           },
         },
       },
