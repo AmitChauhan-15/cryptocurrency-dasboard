@@ -142,6 +142,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
       );
       return;
     } else {
+      console.log("else");
       let newPortfolio = [];
 
       const sellCurr = exchangeCurrency.sellCurrency;
@@ -172,6 +173,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
 
       if (Number(sellValue) > Number(currentVolumeOfCurrency)) {
         alert.error("You can't sell more than you have!");
+        return;
       }
 
       // Amount left after sell

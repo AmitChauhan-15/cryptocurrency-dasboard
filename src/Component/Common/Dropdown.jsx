@@ -45,16 +45,6 @@ const Dropdown = ({
     }
   };
 
-  useEffect(() => {
-    if (defaultValue) {
-      setSelectedValues([defaultValue]);
-      type === "default"
-        ? handleChange(defaultValue)
-        : handleChange([defaultValue]);
-    }
-    //eslint-disable-next-line
-  }, [defaultValue]);
-
   const getSelectedValueText = () => {
     if (selectedValues.length === 0) {
       return placeholder || "Select";
@@ -70,6 +60,16 @@ const Dropdown = ({
 
     return selectedValues[0];
   };
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectedValues([defaultValue]);
+      type === "default"
+        ? handleChange(defaultValue)
+        : handleChange([defaultValue]);
+    }
+    //eslint-disable-next-line
+  }, [defaultValue]);
 
   return (
     <div className="relative flex items-center justify-start sm:justify-between">

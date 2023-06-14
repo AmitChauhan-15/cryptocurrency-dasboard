@@ -9,6 +9,7 @@ function Sidebar({ active = false, setState, cryptoOption }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Ajax-call for sidebar data
     const sidebarData = async () => {
       setLoading(true);
       let crypto = {};
@@ -18,10 +19,12 @@ function Sidebar({ active = false, setState, cryptoOption }) {
         const response = await fetch(url);
         const data = await response.json();
         setCryptoData(data);
+
         data.forEach((obj) => {
           crypto[obj.name] = obj.id;
           crypto[`${obj.name}Price`] = obj.current_price;
         });
+
         cryptoOption(crypto);
       } catch (error) {
         // console.log("ERROR", error);

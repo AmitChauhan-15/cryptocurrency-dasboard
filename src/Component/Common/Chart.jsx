@@ -26,7 +26,7 @@ ChartJS.register(
 );
 
 const Chart = ({ label, chartData, type = "line", legend }) => {
-  const color = ["#60a5fa", "#f56565", "#faf089"];
+  const color = ["#60a5fa", "#f56565", "#faf089", "#7BBF4B", "#7A3A8C"];
 
   const datasets = chartData.map((value, i) => ({
     label: legend?.[i],
