@@ -22,8 +22,12 @@ function Dashboard({ sidebarState, cryptoOption }) {
     { currency: "Tether", volume: "330.05" },
     { currency: "Dogecoin", volume: "1980" },
   ]);
-  const [sell, setSell] = useState({ value: "", currency: "" });
-  // const [buy, setBuy] = useState("");
+  const [exchangeCurrency, setExchangeCurrency] = useState({
+    sellValue: "",
+    sellCurrency: "",
+    buyCurrency: "",
+  });
+  const [cryptocurrencyPrice, setCryptocurrencyPrice] = useState({});
   const [search, setSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -35,6 +39,8 @@ function Dashboard({ sidebarState, cryptoOption }) {
   const [loading, setLoading] = useState(false);
 
   // FUNCTION
+
+  // Updating dateRangeUNIX state based on timeframe button
   const handleTimeFrameChange = (timeFrame) => {
     setTimeFrame(timeFrame);
 
@@ -53,6 +59,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
     setDateRangeUNIX(array);
   };
 
+  // Ajax-call for search by coin
   const searchByCoin = async (searchString) => {
     const query = searchString.split(" ").join("-");
     const url = `https://api.coingecko.com/api/v3/search?query=${query}`;
@@ -72,27 +79,136 @@ function Dashboard({ sidebarState, cryptoOption }) {
     setLoading(false);
   };
 
-  const handleSellCoin = (value) => {
+  // Updating exchangeCurrency state but only sell currency and value
+  const handleSellCurrency = (value) => {
     if (isNaN(Number(value))) {
-      setSell({
-        ...sell,
-        currency: value,
+      setExchangeCurrency({
+        ...exchangeCurrency,
+        sellCurrency: value,
       });
     } else {
-      setSell({
-        ...sell,
-        value,
+      setExchangeCurrency({
+        ...exchangeCurrency,
+        sellValue: value,
       });
     }
   };
 
+  // Updating exchangeCurrency state but only sell currency
+  const handleBuyCurrency = (value) => {
+    setExchangeCurrency({
+      ...exchangeCurrency,
+      buyCurrency: value,
+    });
+  };
+
+  // Fetch the holding(volume) of the currency in portfolio
   const getPortfolioCurrencyHolding = (currency) => {
     return (
       portfolio.filter((obj) => obj.currency === currency)[0]?.volume || ""
     );
   };
 
+  // Calculate the volume of the currency based of the selling currency and its quantity
+  const getExchangeValue = () => {
+    if (
+      exchangeCurrency.sellValue &&
+      exchangeCurrency.sellCurrency &&
+      exchangeCurrency.buyCurrency
+    ) {
+      const sellAmount =
+        exchangeCurrency.sellValue *
+        cryptocurrencyPrice[exchangeCurrency.sellCurrency];
+
+      const quantityOfBuyingCoin =
+        sellAmount / cryptocurrencyPrice[exchangeCurrency.buyCurrency];
+
+      return `${quantityOfBuyingCoin.toFixed(2)}`;
+    } else return "";
+  };
+
+  // Handle click of exchange button: update the portfolio after the exchange
+  const exchangeCoin = () => {
+    // checking if the required input are filled
+    if (
+      !(
+        exchangeCurrency.sellValue &&
+        exchangeCurrency.sellCurrency &&
+        exchangeCurrency.buyCurrency
+      )
+    ) {
+      alert.error(
+        "Please select a currency to sell/buy and enter a valid value."
+      );
+      return;
+    } else {
+      let newPortfolio = [];
+
+      const sellCurr = exchangeCurrency.sellCurrency;
+      const sellValue = exchangeCurrency.sellValue;
+      const buyCurr = exchangeCurrency.buyCurrency;
+      const buyValue = getExchangeValue();
+
+      // Currency is exist in portfolio
+      const ifCurrencyAlreadyExist = portfolio.filter(
+        (obj) => obj.currency === buyCurr
+      );
+
+      // Coin buy
+      const newCoinAddToPortfolio = {
+        currency: buyCurr,
+        volume: `${
+          Number(buyValue) + Number(ifCurrencyAlreadyExist[0]?.volume || 0)
+        }`,
+        price:
+          buyValue * cryptocurrencyPrice[buyCurr] +
+          Number(ifCurrencyAlreadyExist[0]?.price || 0),
+      };
+
+      // Current holding(volume) of the selling currency
+      const currentVolumeOfCurrency = portfolio.filter(
+        (obj) => obj.currency === sellCurr
+      )[0].volume;
+
+      if (Number(sellValue) > Number(currentVolumeOfCurrency)) {
+        alert.error("You can't sell more than you have!");
+      }
+
+      // Amount left after sell
+      const amountLeft = currentVolumeOfCurrency - sellValue;
+
+      console.log("amoutLeft", amountLeft, Number(amountLeft).toPrecision(3));
+
+      // removing the currency if the holding(volume) is zero
+      if (Number(amountLeft.toFixed(3)) === 0) {
+        newPortfolio = portfolio.filter(
+          (obj) => !(obj.currency === sellCurr || obj.currency === buyCurr)
+        );
+        console.log("left", newCoinAddToPortfolio);
+
+        newPortfolio = [...newPortfolio, newCoinAddToPortfolio];
+      } else {
+        newPortfolio = portfolio.filter(
+          (obj) => !(obj.currency === sellCurr || obj.currency === buyCurr)
+        );
+        newPortfolio = [
+          ...newPortfolio,
+          {
+            currency: sellCurr,
+            volume: amountLeft.toFixed(2),
+            price: amountLeft * cryptocurrencyPrice[sellCurr],
+          },
+          newCoinAddToPortfolio,
+        ];
+      }
+      console.log("PROT", newPortfolio);
+
+      setPortfolio(newPortfolio);
+    }
+  };
+
   useEffect(() => {
+    // Ajax-call for chart data
     const getChartData = async (urls) => {
       let label = [];
       let price = [];
@@ -106,6 +222,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
           let dateFormat = "";
           let dateLimit = 0;
 
+          // Date format according to timeframe
           if (timeFrame === "1D") {
             dateFormat = "HH:mm";
             dateLimit = 12;
@@ -143,13 +260,13 @@ function Dashboard({ sidebarState, cryptoOption }) {
       }
 
       setLoading(false);
-      console.log("label", label);
 
       label.length > 0 && setChartLabel(label);
       price.length > 0 && setChartPrice(price);
     };
 
     if (cryptoOption && cryptocurrency.length > 0) {
+      // adding price of cryptocurrency in portfolio
       const addPriceToPortfolio = portfolio.map((obj) => {
         let currentPrice = cryptoOption[`${obj.currency}Price`] * obj.volume;
         obj.price = currentPrice;
@@ -159,18 +276,28 @@ function Dashboard({ sidebarState, cryptoOption }) {
 
       setPortfolio(addPriceToPortfolio);
 
+      // URLs array of maximum two cryptocurrency
       const urls = cryptocurrency.map(
         (cc) =>
           `https://api.coingecko.com/api/v3/coins/${cryptoOption[cc]}/market_chart/range?vs_currency=${currency}&from=${dateRangeUNIX[0]}&to=${dateRangeUNIX[1]}`
       );
 
       getChartData(urls);
+
+      // set cryptocurrencyPrice state for exchange coin
+      const priceOfCrypto = {};
+
+      Object.keys(cryptoOption)
+        .filter((key) => key.includes("Price"))
+        .forEach(
+          (key) => (priceOfCrypto[`${key.slice(0, -5)}`] = cryptoOption[key])
+        );
+
+      setCryptocurrencyPrice(priceOfCrypto);
     }
 
     //eslint-disable-next-line
   }, [cryptoOption, dateRangeUNIX, currency, cryptocurrency]);
-
-  console.log("SELL", sell);
 
   return (
     <>
@@ -301,7 +428,7 @@ function Dashboard({ sidebarState, cryptoOption }) {
                     : [[300, 500, 200]]
                 }
                 label={portfolio.map(
-                  (obj) => `${obj.currency} (${obj.volume})`
+                  (obj) => `${obj.currency} (${Number(obj.volume).toFixed(2)})`
                 )}
               />
             </div>
@@ -320,16 +447,20 @@ function Dashboard({ sidebarState, cryptoOption }) {
                   label="Sell"
                   labelClass="text-red-500"
                   color="dark"
-                  custClass="min-w-28 max-w-28"
-                  handleChange={handleSellCoin}
+                  custClass="min-w-28 max-w-28 lg:min-w-32 lg:max-w-32"
+                  handleChange={handleSellCurrency}
                 />
               </div>
               <div className="ml-6 ">
                 <Input
                   label="Enter value"
-                  max={getPortfolioCurrencyHolding(sell.currency) || ""}
-                  state={sell.value}
-                  setState={handleSellCoin}
+                  max={
+                    getPortfolioCurrencyHolding(
+                      exchangeCurrency.sellCurrency
+                    ) || ""
+                  }
+                  state={exchangeCurrency.sellValue}
+                  setState={handleSellCurrency}
                 />
               </div>
             </div>
@@ -338,26 +469,35 @@ function Dashboard({ sidebarState, cryptoOption }) {
                 <Dropdown
                   placeholder="Currency"
                   options={
-                    cryptoOption &&
-                    Object.keys(cryptoOption).filter(
-                      (key) => !key.includes("Price")
-                    )
+                    cryptoOption
+                      ? Object.keys(cryptoOption).filter(
+                          (key) => !key.includes("Price")
+                        )
+                      : []
                   }
                   label="Buy"
                   labelClass="text-green-500"
                   color="dark"
                   optionPosition="top"
-                  custClass="min-w-28 max-w-28 "
+                  custClass="min-w-28 max-w-28 lg:min-w-32 lg:max-w-32"
+                  handleChange={handleBuyCurrency}
                 />
               </div>
               <div className="ml-6">
                 <p className="text-sm sm:text-base text-green-500 font-semibold">
-                  2300 Eth
+                  {`${getExchangeValue()}  ${
+                    exchangeCurrency.buyCurrency &&
+                    exchangeCurrency.buyCurrency.slice(0, 3)
+                  }`}
                 </p>
               </div>
             </div>
             <div className="flex w-full justify-center my-4">
-              <Button child="Exchange" custClass="h-12 mb-5" />
+              <Button
+                child="Exchange"
+                custClass="h-12 mb-5"
+                handleClick={exchangeCoin}
+              />
             </div>
           </div>
         </div>

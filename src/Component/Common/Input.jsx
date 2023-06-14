@@ -14,7 +14,7 @@ function Input({
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    if (max && e.target.value > max) {
+    if (max && Number(e.target.value) > Number(max)) {
       setError(`Limit exceed`);
     } else {
       setError("");

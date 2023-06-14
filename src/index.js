@@ -9,9 +9,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 // Alert configuration
 const options = {
   position: "top center",
-  timeout: 6000,
+  timeout: 5000,
   offset: "30px",
-  transition: "scale",
+  transition: "fade",
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

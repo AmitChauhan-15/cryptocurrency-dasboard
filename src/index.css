@@ -55,3 +55,11 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #696969;
 }
+
+/* Override the default styles for the alert message */
+#__react-alert__ > div > div > div {
+  /* Add your custom styles for the alert message */
+  width: 80% !important;
+  margin: 30px auto !important;
+
+}
